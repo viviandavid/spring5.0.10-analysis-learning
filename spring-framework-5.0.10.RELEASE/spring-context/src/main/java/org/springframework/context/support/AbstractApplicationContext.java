@@ -218,6 +218,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 	/**
 	 * Create a new AbstractApplicationContext with no parent.
+	 * ClassPathXmlApplicationContext 最高层的构造器
 	 */
 	public AbstractApplicationContext() {
 		this.resourcePatternResolver = getResourcePatternResolver();
@@ -305,6 +306,27 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * form, allowing for further customization.
 	 * <p>If none specified, a default environment will be initialized via
 	 * {@link #createEnvironment()}.
+	 * ConfigurableEnvironment实现了Environment, ConfigurablePropertyResolver
+	 * Spring Profile特性是从3.1开始的，其主要是为了解决这样一种问题:
+	 * 线上环境和测试环境使用不同的配置或是数据库或是其它。有了Profile便可以在 不同环境之间无缝切换。
+	 * Spring容器管理的所有bean都是和一个profile绑定在一起的。
+	 * Profile的配置文件示例:
+	 *
+	 * <beans profile="develop">
+	 *     <context:property-placeholder location="classpath*:jdbc-develop.properties"/>
+	 * </beans>
+	 * <beans profile="production">
+	 *     <context:property-placeholder location="classpath*:jdbc-production.properties"/>
+	 * </beans>
+	 * <beans profile="test">
+	 *     <context:property-placeholder location="classpath*:jdbc-test.properties"/>
+	 * </beans>
+	 *
+	 * 在启动代码中可以用如下代码设置活跃(当前使用的)Profile:
+	 *
+	 * context.getEnvironment().setActiveProfiles("dev");
+	 * 还有注释 在web.xml中进行配置等
+	 *
 	 */
 	@Override
 	public ConfigurableEnvironment getEnvironment() {
@@ -442,6 +464,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * into Resource instances. Default is a
 	 * {@link org.springframework.core.io.support.PathMatchingResourcePatternResolver},
 	 * supporting Ant-style location patterns.
+	 * 支持 ant风格模式
 	 * <p>Can be overridden in subclasses, for extended resolution strategies,
 	 * for example in a web environment.
 	 * <p><b>Do not call this when needing to resolve a location pattern.</b>
@@ -510,13 +533,18 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		return this.applicationListeners;
 	}
 
+	/**
+	 * 这个是一个很重要的方法 bean的解析就在这个方法
+	 * @throws BeansException
+	 * @throws IllegalStateException
+	 */
 	@Override
 	public void refresh() throws BeansException, IllegalStateException {
 		synchronized (this.startupShutdownMonitor) {
-			// Prepare this context for refreshing.
+			// Prepare this context for refreshing. 为更新准备上下文，设置一些标志
 			prepareRefresh();
 
-			// Tell the subclass to refresh the internal bean factory.
+			// Tell the subclass to refresh the internal bean factory. 通知子类去更新bean factory
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.

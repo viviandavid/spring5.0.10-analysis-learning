@@ -378,6 +378,9 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 		return this.propertySources;
 	}
 
+	/**
+	 * 如果安全管理器阻止获取全部的系统属性，那么会尝试获取单个属性的可能性，如果还不行就抛出异常
+	 */
 	@Override
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public Map<String, Object> getSystemProperties() {
@@ -403,6 +406,10 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 			};
 		}
 	}
+
+	/**
+	 *  调用System.getenv()，最终会获取jvm和OS的一些版本信息。
+	 */
 
 	@Override
 	@SuppressWarnings({"unchecked", "rawtypes"})
@@ -568,6 +575,7 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 
 	@Override
 	public String resolveRequiredPlaceholders(String text) throws IllegalArgumentException {
+		//text即配置文件路径，比如classpath:config.xml
 		return this.propertyResolver.resolveRequiredPlaceholders(text);
 	}
 

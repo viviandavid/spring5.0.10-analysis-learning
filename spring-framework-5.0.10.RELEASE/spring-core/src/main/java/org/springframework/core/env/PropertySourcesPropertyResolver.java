@@ -74,6 +74,12 @@ public class PropertySourcesPropertyResolver extends AbstractPropertyResolver {
 		return getProperty(key, String.class, false);
 	}
 
+	/**
+	 * 从System.getProperty和System.getenv获取，但是由于环境变量是无法自定义的，
+	 * 所以其实此处只能通过System.setProperty指定。
+	 * System.setProperty("spring","classpath");
+	 * 注意，classpath:XXX这种写法的classpath前缀到目前为止还没有被处理。
+	 */
 	@Nullable
 	protected <T> T getProperty(String key, Class<T> targetValueType, boolean resolveNestedPlaceholders) {
 		if (this.propertySources != null) {

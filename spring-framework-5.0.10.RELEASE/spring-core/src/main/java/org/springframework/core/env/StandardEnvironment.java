@@ -72,6 +72,8 @@ public class StandardEnvironment extends AbstractEnvironment {
 	 * @see AbstractEnvironment#customizePropertySources(MutablePropertySources)
 	 * @see #getSystemProperties()
 	 * @see #getSystemEnvironment()
+	 * MutablePropertySources 里面有一个CopyOnWriteArrayList作为存储
+	 * 存储系统的参数
 	 */
 	@Override
 	protected void customizePropertySources(MutablePropertySources propertySources) {
