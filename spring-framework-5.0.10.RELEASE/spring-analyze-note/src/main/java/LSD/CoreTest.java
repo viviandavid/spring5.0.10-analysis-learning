@@ -17,6 +17,7 @@ public class CoreTest {
 		SimpleBean simpleBean = xmlApplicationContext.getBean(SimpleBean.class);
 		simpleBean.send();
 		xmlApplicationContext.close();
+		//test submiting
 
 //		System.setProperty("spring","classpath");
 //		ClassPathXmlApplicationContext context =
